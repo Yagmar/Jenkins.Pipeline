@@ -33,6 +33,7 @@ pipeline {
             steps {
                 script {
                     sh 'cat mon_dossier/mon_fichier.txt'
+                    sh 'pwd'
                 }
             }
         }
