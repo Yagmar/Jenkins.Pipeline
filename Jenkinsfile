@@ -1,14 +1,28 @@
 pipeline {
     agent any
 
+    environment {
+        CUSTOM_WORKSPACE = "/Users/yagmar/Documents/pipeline"
+    }
+
     stages {
-        stage('Créer un dossier') {
+        stage('Préparation du dossier') {
             steps {
                 script {
-                    echo '📁 This job is running ob dev branch'
-                    sh 'mkdir -p mon_dossier'
+                    echo '📂 Création du dossier de travail'
+                    sh "mkdir -p ${env.CUSTOM_WORKSPACE}"
+                    echo "✅ Dossier de travail : ${env.CUSTOM_WORKSPACE}"
+                }
+            }
+        }
 
-                    echo '✅ Dossier créé : mon_dossier'
+        stage('Clonage du dépôt') {
+            steps {
+                script {
+                    dir(env.CUSTOM_WORKSPACE) {
+                        checkout scm
+                    }
+                    echo "✅ Code cloné dans : ${env.CUSTOM_WORKSPACE}"
                 }
             }
         }
@@ -16,8 +30,10 @@ pipeline {
         stage('Créer un fichier') {
             steps {
                 script {
-                    sh 'touch mon_dossier/mon_fichier.txt'
-                    echo '✅ Fichier créé : mon_fichier.txt'
+                    dir(env.CUSTOM_WORKSPACE) {
+                        sh 'touch mon_fichier.txt'
+                        echo '✅ Fichier créé : mon_fichier.txt'
+                    }
                 }
             }
         }
@@ -25,8 +41,10 @@ pipeline {
         stage('Écrire dans le fichier') {
             steps {
                 script {
-                    sh 'echo "Ceci est un test avec Jenkins." > mon_dossier/mon_fichier.txt'
-                    echo '✅ Texte ajouté dans mon_fichier.txt'
+                    dir(env.CUSTOM_WORKSPACE) {
+                        sh 'echo "Ceci est un test avec Jenkins." > mon_fichier.txt'
+                        echo '✅ Texte ajouté dans mon_fichier.txt'
+                    }
                 }
             }
         }
@@ -34,8 +52,10 @@ pipeline {
         stage('Vérifier le contenu du fichier') {
             steps {
                 script {
-                    sh 'cat mon_dossier/mon_fichier.txt'
-                    sh 'pwd'
+                    dir(env.CUSTOM_WORKSPACE) {
+                        sh 'cat mon_fichier.txt'
+                        sh 'pwd'
+                    }
                 }
             }
         }
