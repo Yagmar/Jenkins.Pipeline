@@ -5,7 +5,9 @@ pipeline {
         stage('Créer un dossier') {
             steps {
                 script {
+                    echo '📁 This job is running ob dev branch'
                     sh 'mkdir -p mon_dossier'
+
                     echo '✅ Dossier créé : mon_dossier'
                 }
             }
